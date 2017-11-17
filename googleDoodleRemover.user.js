@@ -6,7 +6,7 @@
 // @author       Mike "yo1dog" Moore
 // @match        https://www.google.com/*
 // @grant        none
-// @icon         
+// @icon         https://raw.githubusercontent.com/yo1dog/google-doodle-remover/master/icon.ico
 // @run-at       document-start
 // ==/UserScript==
 
