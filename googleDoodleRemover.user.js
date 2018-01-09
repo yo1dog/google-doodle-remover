@@ -11,16 +11,24 @@
 // ==/UserScript==
 
 
-// listen for changes to the document element (and all child elements)
-const observer = new MutationObserver(mutations => {
-  // on each change attempt to remove Google doodles
+(function run() {
+  // try running immediately first
   const success = removeGoogleDoodle(document);
   if (success) {
-    // once the doodle has been removed, stop listening for changes
-    observer.disconnect();
+    return;
   }
-});
-observer.observe(document.documentElement, {childList: true, subtree: true});
+
+  // listen for changes to the document element (and all child elements)
+  const observer = new MutationObserver(mutations => {
+    // on each change attempt to remove Google doodles
+    const success = removeGoogleDoodle(document);
+    if (success) {
+      // once the doodle has been removed, stop listening for changes
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.documentElement, {childList: true, subtree: true});
+})();
 
 
 /**
