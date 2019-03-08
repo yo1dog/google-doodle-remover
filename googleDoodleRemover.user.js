@@ -11,24 +11,23 @@
 // ==/UserScript==
 
 
-(function run() {
-  // try running immediately first
+// immediately attempt to remove Google doodles
+const success = removeGoogleDoodle(document);
+if (success) {
+  // if the doodle was removed, we are done
+  return;
+}
+
+// listen for changes to the document element (and all child elements)
+const observer = new MutationObserver(mutations => {
+  // on each change attempt to remove Google doodles
   const success = removeGoogleDoodle(document);
   if (success) {
-    return;
+    // once the doodle has been removed, stop listening for changes
+    observer.disconnect();
   }
-
-  // listen for changes to the document element (and all child elements)
-  const observer = new MutationObserver(mutations => {
-    // on each change attempt to remove Google doodles
-    const success = removeGoogleDoodle(document);
-    if (success) {
-      // once the doodle has been removed, stop listening for changes
-      observer.disconnect();
-    }
-  });
-  observer.observe(document.documentElement, {childList: true, subtree: true});
-})();
+});
+observer.observe(document.documentElement, {childList: true, subtree: true});
 
 
 /**
@@ -76,7 +75,7 @@ function getGoogleLogoContainerElem(doc) {
  * @returns {HTMLElement}
  */
 function getGoogleMiniLogoContainerElem(doc) {
-  return doc.getElementById('logocont');
+  return doc.getElementsByClassName("logo")[0];
 }
 
 /**
@@ -112,23 +111,19 @@ function createGoogleLogoContainerElem(doc) {
 function createGoogleMiniLogoContainerElem(doc) {
   const template = doc.createElement('template');
   template.innerHTML =  `
-    <div id="logocont" class="nojsv logocont">
-      <h1>
-        <a
-          id="logo"
-          title="Go to Google Home"
-          href="https://www.google.com/webhp?hl=en&amp;sa=X&amp;ved=0ahUKEwjr-8TP2f_WAhVq4YMKHRTXCzMQPAgD"
-          data-hveid="3"
+    <div class="logo">
+      <a
+        href="https://www.google.com/webhp?hl=en&amp;sa=X&amp;ved=0ahUKEwjr-8TP2f_WAhVq4YMKHRTXCzMQPAgD"
+        data-hveid="7"
+      >
+        <img
+          alt="Google"
+          src="/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png"
+          width="92"
+          height="33"
+          onload="indow.lol&amp;&amp;lol()"
         >
-          <img
-            alt="Google"
-            src="/images/branding/googlelogo/2x/googlelogo_color_120x44dp.png"
-            width="120"
-            height="44"
-            onload="typeof google==='object'&amp;&amp;google.aft&amp;&amp;google.aft(this)"
-          >
-        </a>
-      </h1>
+      </a>
     </div>
   `;
   
